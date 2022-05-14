@@ -1,16 +1,20 @@
 package controller
 
-import "fmt"
+import (
+	"class2/service"
+	"fmt"
+)
 
 type Page struct {
-	Id          int64  `json:"id"`
-	User_id     int64  `json:"user_id"`
-	Title       string `json:"title"`
-	Content     string `json:"content"`
-	Create_time int64  `json:"create_time"`
+	Data service.PostData
 }
 
 func CreatePageInfo(page *Page) error {
 	fmt.Println(page)
+	post := page.Data
+	err := service.CreatePost(&post)
+	if err != nil {
+		return err
+	}
 	return nil
 }

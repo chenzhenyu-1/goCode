@@ -3,7 +3,6 @@ package repository
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
 	"os"
 )
 
@@ -26,7 +25,6 @@ func InitTopicIndexMap(filePath string) error {
 			return err
 		}
 		topicTmpMap[topic.Id] = &topic
-		fmt.Println(topicTmpMap[topic.Id])
 	}
 	topicIndexMap = topicTmpMap
 	return nil
@@ -41,11 +39,11 @@ func InitPostIndexMap(filePath string) error {
 	postTmpMap := make(map[int64][]*Post)
 	for scanner.Scan() {
 		text := scanner.Text()
-		var post []*Post
+		var post *Post
 		if err := json.Unmarshal([]byte(text), &post); err != nil {
 			return err
 		}
-		postTmpMap[post[0].Id] = post
+		postTmpMap[int64(post.Parent_id)] = append(postTmpMap[int64(post.Parent_id)], post)
 	}
 	postIndexMap = postTmpMap
 	return nil

@@ -1,9 +1,8 @@
 package tool
 
 import (
-	"bufio"
-	"encoding/binary"
-	"os"
+	"class2/repository"
+	"fmt"
 	"sync"
 )
 
@@ -21,22 +20,10 @@ func NewIdInstance() *ID {
 	idOnce.Do(
 		func() {
 			id = &ID{}
-			filePath := ".\\data\\id"
-			file, _ := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY, os.ModeExclusive)
-			read := bufio.NewReader(file)
-			binary.Read(read, binary.BigEndian, id.Value)
+			id.Value = repository.NewPostDaoInstance().GetPostMaxId()
+			fmt.Println(id.Value)
 		})
 	return id
-}
-
-func (p *ID) SaveId() {
-	p.Lock()
-	filepath := ".\\data\\id"
-	file, _ := os.OpenFile(filepath, os.O_CREATE|os.O_WRONLY, os.ModeExclusive)
-	defer file.Close()
-	write := bufio.NewWriter(file)
-	binary.Write(write, binary.BigEndian, p.Value)
-	p.Unlock()
 }
 
 func (p *ID) GetID() int64 {

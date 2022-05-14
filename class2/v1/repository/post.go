@@ -36,7 +36,7 @@ func (*PostDao) QueryPostById(id int64) ([]*Post, error) {
 	return postIndexMap[id], nil
 }
 
-func (*PostDao) CreatePost(post []*Post) error {
+func (*PostDao) AppendPost(post *Post) error {
 	filePath := ".\\data\\post"
 	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_APPEND|os.O_CREATE, os.ModeAppend)
 	if err != nil {
@@ -56,4 +56,14 @@ func (*PostDao) CreatePost(post []*Post) error {
 	write.WriteByte(byte('\n'))
 	write.Flush()
 	return nil
+}
+
+func (f *PostDao) GetPostMaxId() int64 {
+	n := postIndexMap
+	var counter int64 = 0
+	for _, item := range n {
+		k := len(item)
+		counter = counter + int64(k)
+	}
+	return counter + 1
 }
