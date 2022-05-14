@@ -3,6 +3,7 @@ package repository
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"os"
 )
 
@@ -25,6 +26,7 @@ func InitTopicIndexMap(filePath string) error {
 			return err
 		}
 		topicTmpMap[topic.Id] = &topic
+		fmt.Println(topicTmpMap[topic.Id])
 	}
 	topicIndexMap = topicTmpMap
 	return nil

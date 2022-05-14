@@ -58,6 +58,10 @@ func (f *QueryPageInfoFlow) prepareInfo() error {
 }
 
 func (f *QueryPageInfoFlow) packPageInfo() error {
+	f.pageInfo = &PageInfo{
+		PostList: f.posts,
+		Topic:    f.topic,
+	}
 	return nil
 }
 
