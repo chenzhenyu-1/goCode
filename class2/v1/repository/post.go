@@ -17,6 +17,7 @@ type Post struct {
 }
 
 type PostDao struct {
+	sync.Mutex
 }
 
 var (
@@ -36,7 +37,10 @@ func (*PostDao) QueryPostById(id int64) ([]*Post, error) {
 	return postIndexMap[id], nil
 }
 
-func (*PostDao) AppendPost(post *Post) error {
+func (f *PostDao) AppendPost(post *Post) error {
+	f.Lock()
+	defer f.Unlock()
+	postIndexMap[int64(post.Parent_id)] = append(postIndexMap[int64(post.Parent_id)], post)
 	filePath := ".\\data\\post"
 	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_APPEND|os.O_CREATE, os.ModeAppend)
 	if err != nil {
